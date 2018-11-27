@@ -7,6 +7,7 @@ using namespace std;
  //用户-物品 转换 物品-用户 倒排表
  void TransferTo_ItemToUser(map<int, set<int>>& ori, map<int, set<int>>& dst)
  {
+	 cout << "TransferTo_ItemToUser start" << endl;
 	 if (!dst.empty())
 	 {
 		 dst.clear();
@@ -23,18 +24,23 @@ using namespace std;
 		 }
 		 iter++;
 	 }
+	 cout << "TransferTo_ItemToUser end" << endl;
  }
 
  // 根据倒排表建立稀疏矩阵
  void Create_CoRated_table(map<int, set<int>>& dst, map<int, map<int, int>>& CoRated_table)
  {
 	 //遍历所有物品
+	 cout << "Create_CoRated_table start" << endl;
+	 int total_size = static_cast<int>(dst.size());
 	 map<int, set<int>>::iterator iter_begin = dst.begin();
 	 map<int, set<int>>::iterator iter_End = dst.end();
 	 for (; iter_begin != iter_End; iter_begin++)
 	 {
 		 //连续遍历两次用户表
 		 set<int>& user_set = iter_begin->second;
+		 cout << "total items:" << total_size << "  cur item:" << iter_begin->first << "  user size:" << user_set.size() << endl;
+
 		 set<int>::iterator set_begin1 = user_set.begin();
 		 for (; set_begin1 != user_set.end(); set_begin1++)
 		 {
@@ -71,6 +77,8 @@ using namespace std;
 			 }
 		 }
 	 }
+
+	 cout << "Create_CoRated_table end" << endl;
  }
 
  // 计算用户与用户之间的相似度

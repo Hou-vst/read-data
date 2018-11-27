@@ -72,11 +72,12 @@ int main()
 		{
 			string&& temp = str_buff.substr(start, i - start + 1);
 			start = i + 1;
-			if (!skip)
+			i = i + 10;
+		/*	if (!skip)
 			{
 				skip = true;
 				continue;
-			}
+			}*/
 			
 			vector<int>&& temp_result = dealStrTemp(temp);
 			user_to_item[temp_result[0]].insert(temp_result[1]);
