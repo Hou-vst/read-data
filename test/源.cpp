@@ -1,15 +1,14 @@
 #include<string>
-#include<map>
 #include<iostream>
 #include<fstream>
-#include<vector>
+#include"usercf.h"
 
 using namespace std;
 
 vector<int> dealStrTemp(const string& temp)
 {
 	int i_start = 0;
-	int size = temp.size();
+	int size = static_cast<int>(temp.size());
 	vector<int> result;
 	for (int i = 0; i < size && result.size()<2; i++)
 	{
@@ -22,6 +21,26 @@ vector<int> dealStrTemp(const string& temp)
 	}
 
 	return result;
+}
+
+void testUserCF(map<int, set<int>>& user_to_item)
+{
+	// 用户-物品 转换 物品-用户 倒排表
+	map<int, set<int>> item_to_user;
+	TransferTo_ItemToUser(user_to_item, item_to_user);
+
+	// 根据倒排表建立稀疏矩阵
+	map<int, map<int, int>> CoRated_table;
+	Create_CoRated_table(item_to_user, CoRated_table);
+
+	// 计算用户与用户之间的相似度
+	map<int, map<int, float>> result;
+	Calculate_Similarity(CoRated_table, user_to_item, result);
+
+	// 输出结果
+	PrintResult(result);
+
+
 }
 
 int main()
@@ -42,8 +61,8 @@ int main()
 	buff = NULL;
 	// userid movieid rating timestamp
 
-	map<int, vector<int>> user_to_item;
-	int str_size = str_buff.size();
+	map<int, set<int>> user_to_item;
+	int str_size = static_cast<int>(str_buff.size());
 	int start = 0;
 	bool skip = false;
 	int count = 0;
@@ -60,10 +79,13 @@ int main()
 			}
 			
 			vector<int>&& temp_result = dealStrTemp(temp);
-			user_to_item[temp_result[0]].push_back(temp_result[1]);
+			user_to_item[temp_result[0]].insert(temp_result[1]);
 			cout << count++ << endl;
    	 	}
 	}
+
+	//测试usercf
+	testUserCF(user_to_item);
 
 	return 0;
 }
