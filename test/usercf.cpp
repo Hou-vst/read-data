@@ -35,11 +35,13 @@ using namespace std;
 	 int total_size = static_cast<int>(dst.size());
 	 map<int, set<int>>::iterator iter_begin = dst.begin();
 	 map<int, set<int>>::iterator iter_End = dst.end();
+	 int cur = 0;
 	 for (; iter_begin != iter_End; iter_begin++)
 	 {
 		 //连续遍历两次用户表
 		 set<int>& user_set = iter_begin->second;
-		 cout << "total items:" << total_size << "  cur item:" << iter_begin->first << "  user size:" << user_set.size() << endl;
+		 cur++;
+		 cout << "total items:" << total_size << "  cur item:" << cur << "  user size:" << user_set.size() << endl;
 
 		 set<int>::iterator set_begin1 = user_set.begin();
 		 for (; set_begin1 != user_set.end(); set_begin1++)
