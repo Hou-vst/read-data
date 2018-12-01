@@ -1,29 +1,39 @@
 #include<string>
 #include<iostream>
 #include<fstream>
+#include<vector>
+#include<map>
+#include<set>
 #include"usercf.h"
 
 using namespace std;
 
-vector<int> dealStrTemp(const string& temp)
+void dealStrTemp(const string& temp,int& result1,int& result2)
 {
 	int i_start = 0;
 	int size = static_cast<int>(temp.size());
-	vector<int> result;
-	for (int i = 0; i < size && result.size()<2; i++)
+	int find_num = 0;
+	for (int i = 0; i < size && find_num<2; i++)
 	{
 		if (temp[i] == ':' && i+1<size && temp[i+1] == ':')
 		{
 			int t = atoi(temp.substr(i_start,i-i_start).c_str());
-			result.push_back(t);
 			i_start = i + 2;
+			find_num++;
+			if (find_num == 1)
+			{
+				result1 = t;
+			}
+			else if (find_num == 2)
+			{
+				result2 = t;
+			}
+			
 		}
 	}
-
-	return result;
 }
 
-void testUserCF(map<int, set<int>>& user_to_item)
+void testUserCF(map<int, set<int>>& user_to_item,map<int, map<int, float>>& result)
 {
 	// 用户-物品 转换 物品-用户 倒排表
 	map<int, set<int>> item_to_user;
@@ -34,11 +44,11 @@ void testUserCF(map<int, set<int>>& user_to_item)
 	Create_CoRated_table(item_to_user, CoRated_table);
 
 	// 计算用户与用户之间的相似度
-	map<int, map<int, float>> result;
+	
 	Calculate_Similarity(CoRated_table, user_to_item, result);
 
 	// 输出结果
-	PrintResult(result);
+	//PrintResult(result);
 
 
 }
@@ -78,15 +88,33 @@ int main()
 				skip = true;
 				continue;
 			}*/
+			int result1 = 0;
+			int result2 = 0;
+			dealStrTemp(temp,result1,result2);
+			//user_to_item[temp_result[0]].insert(temp_result[1]);
+			map<int, set<int>>::iterator iter= user_to_item.find(result1);
+			if (iter != user_to_item.end())
+			{
+				iter->second.insert(result2);
+			}
+			else
+			{
+				set<int> set_temp;
+				set_temp.insert(result2);
+				user_to_item.insert(pair<int, set<int>>(result1, set_temp));
+			}
 			
-			vector<int>&& temp_result = dealStrTemp(temp);
-			user_to_item[temp_result[0]].insert(temp_result[1]);
-			cout << count++ << endl;
+			count++;
+			if (count % 10000 == 0)
+			{
+				cout << count << endl;
+			}
    	 	}
 	}
 
 	//测试usercf
-	testUserCF(user_to_item);
+	map<int, map<int, float>> result;
+	testUserCF(user_to_item, result);
 
 	return 0;
 }
