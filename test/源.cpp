@@ -91,8 +91,12 @@ int main()
 			int result1 = 0;
 			int result2 = 0;
 			dealStrTemp(temp,result1,result2);
-			//user_to_item[temp_result[0]].insert(temp_result[1]);
-			map<int, set<int>>::iterator iter= user_to_item.find(result1);
+			
+			//13.301s
+			user_to_item[result1].insert(result2);
+
+			//13.897s
+			/*map<int, set<int>>::iterator iter= user_to_item.find(result1);
 			if (iter != user_to_item.end())
 			{
 				iter->second.insert(result2);
@@ -102,7 +106,7 @@ int main()
 				set<int> set_temp;
 				set_temp.insert(result2);
 				user_to_item.insert(pair<int, set<int>>(result1, set_temp));
-			}
+			}*/
 			
 			count++;
 			if (count % 10000 == 0)
